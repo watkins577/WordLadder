@@ -1,9 +1,7 @@
 package uk.me.andrewwatkins.wordladder;
 
-
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import uk.me.andrewwatkins.datastructures.Graph;
 import uk.me.andrewwatkins.datastructures.Node;
@@ -59,7 +57,7 @@ public class WordLadder {
 		}
 		
 		System.out.print("How many steps? ");
-		int steps = KeyboardInput.getInstance().readInt();
+		final int steps = KeyboardInput.getInstance().readInt();
 		if (steps < 1) {
 			System.err.println("Too few steps, minimum of 1");
 			return;
@@ -71,38 +69,24 @@ public class WordLadder {
 			return;
 		}
 		
-		generateGraph(wordList);
-		System.out.println(wordGraph);
-		
-		int i = 0, curSteps = 0, wordIndex = 0;
-		String curString;
-		List<String> curList = new ArrayList<String>();
-		curList.add(word);
-		
-		for (i = 0; i < wordGraph.size(); i++) {
-			if (wordList.get(i).equals(word)) {
-				wordIndex = i;
+		wordGraph = generateGraph(wordList);
+		int wordAt = -1;
+		for (int i = 0; i < wordGraph.size(); i++) {
+			if (wordGraph.getNodeAt(i).getValue().equals(word)) {
+				wordAt = i;
 				break;
 			}
 		}
-		
-		for (i = 0; i < steps; i++) {
-			
+		if (wordAt == -1) {
+			System.err.print("Something happened, everything broke, arms spaghetti!");
+			return;
 		}
-		/*while (i < wordGraph.size() || curSteps < steps) {
-			curString = wordGraph.get
-			if (isSimilar(curString, word) && !curList.contains(curString)) {
-				curSteps ++;
-				curList.add(curString);
-				word = curString;
-				i = -1;
-			}
-			
-			i++;
-		}*/
-		
-		System.out.println(curList);
-		//System.out.println("GENERATE");
+		Stack<Node<String>> words = new Stack<Node<String>>();
+		wordGraph.depthFirstSearch(wordGraph.getNodeAt(wordAt), steps, words);
+		if (words.size() == 0) {
+			System.err.println("Could not work get a path of length " + steps + " unfortunately. Try a shorter amount.");
+		}
+		System.out.println(words);
 	}
 	
 	public void discover() {
@@ -120,25 +104,60 @@ public class WordLadder {
 			return;
 		}
 		
+		List<String> wordList = FileInput.getInstance().readFile("dictionary/dict" + word1.length() + ".dat");
+		if (!wordList.contains(word1) || !wordList.contains(word2)) {
+			System.err.println("One of the words are not in the dictionary");
+			return;
+		}
 		
-		System.out.println("DISCOVER");
+		wordGraph = generateGraph(wordList);
+		
+		int wordAt1 = -1;
+		int wordAt2 = -1;
+		for (int i = 0; i < wordGraph.size(); i++) {
+			if (wordGraph.getNodeAt(i).getValue().equals(word1)) {
+				wordAt1 = i;
+				break;
+			}
+		}
+		if (wordAt1 == -1) {
+			System.err.print("Something happened, everything broke, arms spaghetti!");
+			return;
+		}
+		
+		for (int i = 0; i < wordGraph.size(); i++) {
+			if (wordGraph.getNodeAt(i).getValue().equals(word2)) {
+				wordAt2 = i;
+				break;
+			}
+		}
+		if (wordAt2 == -1) {
+			System.err.print("Something happened, everything broke, arms spaghetti!");
+			return;
+		}
+		
+		Stack<Node<String>> words = new Stack<Node<String>>();
+		wordGraph.breadthFirstSearch(wordGraph.getNodeAt(wordAt1), wordGraph.getNodeAt(wordAt2), words);
+		System.out.println(words);
 	}
 	
-	public void generateGraph(List<String> dictionary) {
+	public Graph<String> generateGraph(List<String> dictionary) {
 		int i, j;
-		wordGraph = new Graph<String>();
+		Graph<String> g = new Graph<String>();
 		
 		for (i = 0; i < dictionary.size(); i++) {
-			wordGraph.addNode(new Node<String>(dictionary.get(i)));
+			g.addNode(i, new Node<String>(dictionary.get(i)));
 		}
 		
 		for (i = 0; i < dictionary.size(); i++) {
 			for (j = i+1; j < dictionary.size(); j++) {
 				if (isSimilar(dictionary.get(i), dictionary.get(j))) {
-					wordGraph.addBidirectionalEdge(wordGraph.getNodeAt(i), wordGraph.getNodeAt(j));
+					g.addBidirectionalEdge(g.getNodeAt(i), g.getNodeAt(j));
 				}
 			}
 		}
+		
+		return g;
 	}
 
 }

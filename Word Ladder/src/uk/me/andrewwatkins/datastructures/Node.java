@@ -1,11 +1,10 @@
 package uk.me.andrewwatkins.datastructures;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class Node<Type> {
 
-	private Map<Node<Type>, Integer> connectedNodes;
+	private HashMap<Node<Type>, Integer> connectedNodes;
 	
 	private Type value;
 	
@@ -34,7 +33,7 @@ public class Node<Type> {
 		return (connectedNodes.get(node) != null) && (connectedNodes.get(node) != 0);
 	}
 	
-	public Map<Node<Type>, Integer> getConnectedNodes() {
+	public HashMap<Node<Type>, Integer> getConnectedNodes() {
 		return connectedNodes;
 	}
 	

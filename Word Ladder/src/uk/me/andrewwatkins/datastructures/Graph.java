@@ -1,18 +1,20 @@
 package uk.me.andrewwatkins.datastructures;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
 
 public class Graph<Type> {
 
-	private List<Node<Type>> nodes;
+	private HashMap<Integer, Node<Type>> nodes;
 	
 	public Graph () {
-		nodes = new ArrayList<Node<Type>>();
+		nodes = new HashMap<Integer, Node<Type>>();
 	}
 	
-	public void addNode(Node<Type> node) {
-		nodes.add(node);
+	public void addNode(int key, Node<Type> node) {
+		nodes.put(key, node);
 	}
 	
 	public void addEdge(Node<Type> n1, Node<Type> n2) {
@@ -42,5 +44,70 @@ public class Graph<Type> {
 	
 	public int size() {
 		return nodes.size();
+	}
+	
+	public boolean depthFirstSearch(Node<Type> n, int i, Stack<Node<Type>> retStack) {
+		if (retStack.contains(n)) {
+			return false;
+		}
+		retStack.push(n);
+		if (retStack.size() > i) {
+			return true;
+		}
+		
+		for (Node<Type> node : n.getConnectedNodes().keySet()) {
+			if (depthFirstSearch(node, i, retStack)) {
+				return true;
+			}
+		}
+		
+		retStack.pop();
+		return false;
+	}
+	
+	public boolean depthFirstSearch(Node<Type> n1, Node<Type> n2, Stack<Node<Type>> retStack) {
+		if (retStack.contains(n1)) {
+			return false;
+		}
+		retStack.push(n1);
+		if (n1 == n2) {
+			return true;
+		}
+		
+		for (Node<Type> node : n1.getConnectedNodes().keySet()) {
+			
+		
+			if (depthFirstSearch(node, n2, retStack)) {
+				return true;
+			}
+		}
+		
+		retStack.pop();
+		return false;
+	}
+	
+	public Node<Type> breadthFirstSearch(Node<Type> n1, Node<Type> n2, Stack<Node<Type>> retStack) {
+		Queue<Node<Type>> q = new LinkedList<Node<Type>>();
+		Stack<Node<Type>> visStack = new Stack<Node<Type>>();
+		q.add(n1);
+		visStack.add(n1);
+		while (!q.isEmpty()) {
+			Node<Type> n = q.remove();
+			System.out.print(n.toString() + ", ");
+			if (n == n2) {
+				System.out.println();
+				return n2;
+			}
+			for (Node<Type> node : n.getConnectedNodes().keySet()) {
+				if (!visStack.contains(node)) {
+					visStack.add(node);
+					q.add(node);
+				}
+			}
+		}
+		
+		System.out.println();
+		System.err.println("Couldn't reach second node.");
+		return null;
 	}
 }
