@@ -62,8 +62,12 @@ public class WordLadder {
 			System.err.println("Too few steps, minimum of 1");
 			return;
 		}
+		if (steps > 100) {
+			System.err.println("Too many steps, maximum of 100");
+			return;
+		}
 		
-		List<String> wordList = FileInput.getInstance().readFile("dictionary/dict" + word.length() + ".dat");
+		List<String> wordList = FileInput.readFile("dictionary/dict" + word.length() + ".dat");
 		if (!wordList.contains(word)) {
 			System.err.println("Word is not in the dictionary");
 			return;
@@ -82,9 +86,10 @@ public class WordLadder {
 			return;
 		}
 		Stack<Node<String>> words = new Stack<Node<String>>();
-		wordGraph.depthFirstSearch(wordGraph.getNodeAt(wordAt), steps, words);
-		if (words.size() == 0) {
+		
+		if (!wordGraph.depthFirstSearch(wordGraph.getNodeAt(wordAt), steps, words)) {
 			System.err.println("Could not work get a path of length " + steps + " unfortunately. Try a shorter amount.");
+			return;
 		}
 		System.out.println(words);
 	}
@@ -104,7 +109,7 @@ public class WordLadder {
 			return;
 		}
 		
-		List<String> wordList = FileInput.getInstance().readFile("dictionary/dict" + word1.length() + ".dat");
+		List<String> wordList = FileInput.readFile("dictionary/dict" + word1.length() + ".dat");
 		if (!wordList.contains(word1) || !wordList.contains(word2)) {
 			System.err.println("One of the words are not in the dictionary");
 			return;
@@ -137,7 +142,10 @@ public class WordLadder {
 		}
 		
 		Stack<Node<String>> words = new Stack<Node<String>>();
-		wordGraph.breadthFirstSearch(wordGraph.getNodeAt(wordAt1), wordGraph.getNodeAt(wordAt2), words);
+		if(!wordGraph.breadthFirstSearch(wordGraph.getNodeAt(wordAt1), wordGraph.getNodeAt(wordAt2), words)) {
+			System.err.println("Could not create a path from " + word1 + " to " + word2 + ".");
+			return;
+		}
 		System.out.println(words);
 	}
 	

@@ -22,6 +22,10 @@ public class Node<Type> {
 			System.err.println("Cannot have a negative weight");
 			return;
 		}
+		if (connectedNodes.get(node) != null) {
+			System.err.println("This node has already been added");
+			return;
+		}
 		connectedNodes.put(node, weight);
 	}
 	

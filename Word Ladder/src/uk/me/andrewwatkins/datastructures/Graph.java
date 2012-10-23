@@ -14,6 +14,10 @@ public class Graph<Type> {
 	}
 	
 	public void addNode(int key, Node<Type> node) {
+		if (nodes.values().contains(node)) {
+			System.err.println("Graph already contains this node");
+			return;
+		}
 		nodes.put(key, node);
 	}
 	
@@ -86,27 +90,38 @@ public class Graph<Type> {
 		return false;
 	}
 	
-	public boolean breadthFirstSearch(Node<Type> n1, Node<Type> n2, Stack<Node<Type>> retStack) {
+	public boolean breadthFirstSearch(Node<Type> node1, Node<Type> node2, Stack<Node<Type>> retStack) {
 		Queue<Node<Type>> q = new LinkedList<Node<Type>>();
 		Stack<Node<Type>> visStack = new Stack<Node<Type>>();
-		q.add(n1);
-		visStack.add(n1);
+		HashMap<Node<Type>, Node<Type>> parentList = new HashMap<Node<Type>, Node<Type>>();
+		boolean found = false;
+		q.add(node2);
+		visStack.add(node2);
+		parentList.put(node2, null);
 		while (!q.isEmpty()) {
 			Node<Type> n = q.remove();
-			retStack.add(n);
-			if (n == n2) {
-				return true;
+			if (n == node1) {
+				found = true;
+				break;
 			}
 			for (Node<Type> node : n.getConnectedNodes().keySet()) {
 				if (!visStack.contains(node)) {
 					visStack.add(node);
 					q.add(node);
+					parentList.put(node, n);
 				}
 			}
 		}
 		
-		System.out.println();
-		System.err.println("Couldn't reach second node.");
+		if (found) {
+			Node<Type> n = node1;
+			retStack.add(n);
+			while (parentList.get(n) != null) {
+				n = parentList.get(n);
+				retStack.add(n);
+			}
+			return true;
+		}
 		return false;
 	}
 }

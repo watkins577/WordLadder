@@ -10,18 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileInput {
-
-	private static FileInput inst = new FileInput();
 	
-	private FileInput() {
-		
-	}
-	
-	public static FileInput getInstance() {
-		return inst;
-	}
-	
-	public List<String> readFile(String fileLoc) {
+	/**
+	 * Reads a file from a specified location
+	 * @param fileLoc The location of the file and file name and extension
+	 * @return A list of all the lines from the file
+	 */
+	public static List<String> readFile(String fileLoc) {
 		boolean foundFile = false;
 		List<String> retVal = new ArrayList<String>();
 		FileInputStream fis = null;

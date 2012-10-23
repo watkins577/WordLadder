@@ -23,6 +23,10 @@ public class KeyboardInput {
 		return inst;
 	}
 	
+	/**
+	 * Prints an error in a nice format
+	 * @param err The error message to print
+	 */
 	private void error(String err) {
 		System.err.print("Error: ");
 		System.err.println(err);
@@ -43,6 +47,10 @@ public class KeyboardInput {
 		return retVal;
 	}
 	
+	/**
+	 * Tries to read a byte value typed into the console
+	 * @return The next line parsed as a byte if possible, or Byte.MIN_VALUE if not
+	 */
 	public byte readByte() {
 		byte retVal;
 		try {
@@ -54,6 +62,10 @@ public class KeyboardInput {
 		return retVal;
 	}
 	
+	/**
+	 * Tries to read a short value typed into the console
+	 * @return The next line parsed as a short if possible, or Short.MIN_VALUE if not
+	 */
 	public short readShort() {
 		short retVal;
 		try {
@@ -65,6 +77,10 @@ public class KeyboardInput {
 		return retVal;
 	}
 	
+	/**
+	 * Tries to read a long value typed into the console
+	 * @return The next line parsed as a long if possible, or Long.MIN_VALUE if not
+	 */
 	public long readLong() {
 		long retVal;
 		try {
@@ -91,6 +107,10 @@ public class KeyboardInput {
 		return retVal;
 	}
 	
+	/**
+	 * Tries to read a double value typed into the console
+	 * @return The next line parsed as a double if possible, or Double.MIN_VALUE if not
+	 */
 	public double readDouble() {
 		double retVal;
 		try {
@@ -102,6 +122,10 @@ public class KeyboardInput {
 		return retVal;
 	}
 	
+	/**
+	 * Tries to read a boolean value typed into the console
+	 * @return True if t, or y is the first letter of the entered word, false otherwise
+	 */
 	public boolean readBool() {
 		boolean retVal;
 		char inpChar = readLowerCaseChar();
