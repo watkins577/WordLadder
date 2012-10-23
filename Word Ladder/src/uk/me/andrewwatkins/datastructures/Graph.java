@@ -86,17 +86,16 @@ public class Graph<Type> {
 		return false;
 	}
 	
-	public Node<Type> breadthFirstSearch(Node<Type> n1, Node<Type> n2, Stack<Node<Type>> retStack) {
+	public boolean breadthFirstSearch(Node<Type> n1, Node<Type> n2, Stack<Node<Type>> retStack) {
 		Queue<Node<Type>> q = new LinkedList<Node<Type>>();
 		Stack<Node<Type>> visStack = new Stack<Node<Type>>();
 		q.add(n1);
 		visStack.add(n1);
 		while (!q.isEmpty()) {
 			Node<Type> n = q.remove();
-			System.out.print(n.toString() + ", ");
+			retStack.add(n);
 			if (n == n2) {
-				System.out.println();
-				return n2;
+				return true;
 			}
 			for (Node<Type> node : n.getConnectedNodes().keySet()) {
 				if (!visStack.contains(node)) {
@@ -108,6 +107,6 @@ public class Graph<Type> {
 		
 		System.out.println();
 		System.err.println("Couldn't reach second node.");
-		return null;
+		return false;
 	}
 }
