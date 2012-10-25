@@ -13,7 +13,13 @@ public class Graph<Type> {
 		nodes = new HashMap<Integer, Node<Type>>();
 	}
 	
+	/**
+	 * Adds a node to the graph with index key
+	 * @param key The index of the node
+	 * @param node The node that is getting added to the graph
+	 */
 	public void addNode(int key, Node<Type> node) {
+		//Checks if the node is already in the graph
 		if (nodes.values().contains(node)) {
 			System.err.println("Graph already contains this node");
 			return;
@@ -21,23 +27,50 @@ public class Graph<Type> {
 		nodes.put(key, node);
 	}
 	
+	/**
+	 * Adds an "unweighted" edge to the graph
+	 * @param n1 The first node
+	 * @param n2 The second node
+	 */
 	public void addEdge(Node<Type> n1, Node<Type> n2) {
 		addEdge(n1, n2, 1);
 	}
 	
+	/**
+	 * Adds an edge to the graph
+	 * @param n1 The first node
+	 * @param n2 The second node
+	 * @param weight The weight of the edge
+	 */
 	public void addEdge(Node<Type> n1, Node<Type> n2, int weight) {
 		n1.addEdge(n2, weight);
 	}
 	
+	/**
+	 * Adds an "unweighted" bi-directional edge to the graph
+	 * @param n1 The first node
+	 * @param n2 The second node
+	 */
 	public void addBidirectionalEdge(Node<Type> n1, Node<Type> n2) {
 		addBidirectionalEdge(n1, n2, 1);
 	}
 	
+	/**
+	 * Adds a bi-directional edge to the graph
+	 * @param n1 The first node
+	 * @param n2 The second node
+	 * @param weight
+	 */
 	public void addBidirectionalEdge(Node<Type> n1, Node<Type> n2, int weight) {
 		n1.addEdge(n2, weight);
 		n2.addEdge(n1, weight);
 	}
 	
+	/**
+	 * Gets the node at a certain point
+	 * @param i Index of the node
+	 * @return The node at index i
+	 */
 	public Node<Type> getNodeAt(int i) {
 		return nodes.get(i);
 	}
@@ -46,56 +79,90 @@ public class Graph<Type> {
 		return nodes.toString();
 	}
 	
+	/**
+	 * Gets the size of the graph, which is the amount of nodes it has
+	 * @return The amount of nodes on the graph
+	 */
 	public int size() {
 		return nodes.size();
 	}
 	
+	/**
+	 * Searches a graph for a path of certain length
+	 * @param n The initial node
+	 * @param i The length of the final path
+	 * @param retStack The path this method found
+	 * @return True if the node was found, false otherwise
+	 */
 	public boolean depthFirstSearch(Node<Type> n, int i, Stack<Node<Type>> retStack) {
+		//Checks if the node has already been added to the path
 		if (retStack.contains(n)) {
 			return false;
 		}
+		
+		//Adds the node to the stack
 		retStack.push(n);
+		
+		//Checks if the stack size is the correct size
 		if (retStack.size() > i) {
 			return true;
 		}
 		
+		//Iterates through the child nodes
 		for (Node<Type> node : n.getConnectedNodes().keySet()) {
+			
+			//Does a DFS on each child node
 			if (depthFirstSearch(node, i, retStack)) {
 				return true;
 			}
 		}
 		
-		retStack.pop();
-		return false;
-	}
-	
-	public boolean depthFirstSearch(Node<Type> n1, Node<Type> n2, Stack<Node<Type>> retStack) {
-		if (retStack.contains(n1)) {
-			return false;
-		}
-		retStack.push(n1);
-		if (n1 == n2) {
-			return true;
-		}
-		
-		for (Node<Type> node : n1.getConnectedNodes().keySet()) {
-			
-		
-			if (depthFirstSearch(node, n2, retStack)) {
-				return true;
-			}
-		}
-		
+		//Removes the node from the stack if it wasn't helpful
 		retStack.pop();
 		return false;
 	}
 	
 	/**
-	 * Searches a queue for a certain node. Searches backwards so the provided returned stack is forward
-	 * @param node1 The initial node - 
-	 * @param node2
-	 * @param retStack
-	 * @return
+	 * Searches a graph for a certain node. Will provide a path which is likely to not be the quickest one.
+	 * @param n1 The initial node
+	 * @param n2 The final node
+	 * @param retStack The path this method found
+	 * @return True if the node was found, false otherwise
+	 */
+	public boolean depthFirstSearch(Node<Type> n1, Node<Type> n2, Stack<Node<Type>> retStack) {
+		//Checks if the node has already been added to the path
+		if (retStack.contains(n1)) {
+			return false;
+		}
+		
+		//Adds the node to the stack
+		retStack.push(n1);
+		
+		//Checks if the node has been found
+		if (n1 == n2) {
+			return true;
+		}
+		
+		//Iterates through the child nodes
+		for (Node<Type> node : n1.getConnectedNodes().keySet()) {
+			
+			//Does a DFS on each child node
+			if (depthFirstSearch(node, n2, retStack)) {
+				return true;
+			}
+		}
+		
+		//Removes the node from the stack if it wasn't helpful
+		retStack.pop();
+		return false;
+	}
+	
+	/**
+	 * Searches a graph for a certain node. Searches backwards so the provided returned stack is forward
+	 * @param node1 The initial node
+	 * @param node2 The final node
+	 * @param retStack The path this method found
+	 * @return True if a path was found, false otherwise
 	 */
 	public boolean breadthFirstSearch(Node<Type> node1, Node<Type> node2, Stack<Node<Type>> retStack) {
 		Queue<Node<Type>> q = new LinkedList<Node<Type>>(); //The queue on which the breadthfirstsearch works
